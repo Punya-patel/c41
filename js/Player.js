@@ -3,12 +3,19 @@ class Player {
     this.index = null;
     this.distance = 0;
     this.name = null;
+    this.rank = 0;
   }
 
   getCount(){
     var playerCountRef = database.ref('playerCount');
     playerCountRef.on("value",(data)=>{
       playerCount = data.val();
+    })
+  }
+  getFinishPlayers(){
+    var finishPlayersRef = database.ref('finishPlayers');
+    finishPlayersRef.on("value",(data)=>{
+      finishPlayers = data.val();
     })
   }
 
@@ -22,7 +29,8 @@ class Player {
     var playerIndex = "players/player" + this.index;
     database.ref(playerIndex).set({
       name:this.name,
-      distance:this.distance
+      distance:this.distance,
+      rank:this.rank
     });
   }
 
@@ -31,5 +39,12 @@ class Player {
     playerInfoRef.on("value",(data)=>{
       allPlayers = data.val();
     })
+  }
+
+  static updateFinishPlayers(){
+    database.ref('/').update({
+      finishPlayers:finishPlayers +1
+    })
+    this.rank+=1
   }
 }
